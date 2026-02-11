@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Librairie - Livres Scolaires, Romans et Livres Professionnels</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation (même que index.html) -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-store"></i> Librairie & Boutique
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            <i class="fas fa-home"></i> Accueil
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="boutiqueDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-shopping-bag"></i> Boutique
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="boutique.html?categorie=vetements">Vêtements</a></li>
+                            <li><a class="dropdown-item" href="boutique.html?categorie=accessoires">Accessoires</a></li>
+                            <li><a class="dropdown-item" href="boutique.html?categorie=divers">Produits divers</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="boutique.html">Toutes les catégories</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown active">
+                        <a class="nav-link dropdown-toggle" href="#" id="librairieDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-book"></i> Librairie
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="librairie.html?categorie=scolaire">Livres scolaires</a></li>
+                            <li><a class="dropdown-item" href="librairie.html?categorie=romans">Romans</a></li>
+                            <li><a class="dropdown-item" href="librairie.html?categorie=professionnels">Livres professionnels</a></li>
+                            <li><a class="dropdown-item" href="librairie.html?categorie=ebooks">E-books</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="librairie.html">Tous les livres</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="livraison.html">
+                            <i class="fas fa-truck"></i> Livraison
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">
+                            <i class="fas fa-envelope"></i> Contact
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-outline-light me-2" type="button" data-bs-toggle="modal" data-bs-target="#cartModal">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="badge bg-danger" id="cart-count">0</span>
+                    </button>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        <i class="fas fa-user"></i> Connexion
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <main class="container mt-5 pt-5">
+        <!-- En-tête de la librairie -->
+        <section class="bookstore-header mb-5">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-5 fw-bold text-primary">
+                        <i class="fas fa-book"></i> Notre Librairie
+                    </h1>
+                    <p class="lead">Explorez notre collection de livres scolaires, romans, livres professionnels et e-books</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Rechercher un livre...">
+                        <button class="btn btn-outline-primary" type="button" onclick="searchBooks()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filtres et catégories -->
+        <section class="filters-section mb-4">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="filter-sidebar bg-light p-3 rounded">
+                        <h5 class="mb-3">
+                            <i class="fas fa-filter"></i> Filtrer par catégorie
+                        </h5>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="category" id="all" value="" checked>
+                            <label class="form-check-label" for="all">Toutes les catégories</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="category" id="scolaire" value="scolaire">
+                            <label class="form-check-label" for="scolaire">Livres scolaires</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="category" id="romans" value="romans">
+                            <label class="form-check-label" for="romans">Romans</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="category" id="professionnels" value="professionnels">
+                            <label class="form-check-label" for="professionnels">Livres professionnels</label>
+                        </div>
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="radio" name="category" id="ebooks" value="ebooks">
+                            <label class="form-check-label" for="ebooks">E-books</label>
+                        </div>
+                        
+                        <h6 class="mb-2">Niveau scolaire (pour livres scolaires)</h6>
+                        <select class="form-select mb-3" id="niveauScolaire" disabled>
+                            <option value="">Tous niveaux</option>
+                            <option value="primaire">Primaire</option>
+                            <option value="college">Collège</option>
+                            <option value="lycee">Lycée</option>
+                            <option value="universite">Université</option>
+                        </select>
+                        
+                        <h6 class="mb-2">Prix</h6>
+                        <div class="mb-3">
+                            <label for="priceRange" class="form-label">Fourchette de prix</label>
+                            <input type="range" class="form-range" id="priceRange" min="0" max="100000" value="100000">
+                            <div class="d-flex justify-content-between">
+                                <small>0 F CFA</small>
+                                <small id="maxPrice">100 000 F CFA</small>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary w-100" onclick="applyFilters()">
+                            <i class="fas fa-check"></i> Appliquer les filtres
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="col-md-9">
+                    <!-- Tri et affichage -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <span id="results-count">0 livres trouvés</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <label for="sortSelect" class="me-2">Trier par:</label>
+                            <select class="form-select" id="sortSelect" style="width: auto;" onchange="sortBooks()">
+                                <option value="title">Titre</option>
+                                <option value="author">Auteur</option>
+                                <option value="price-asc">Prix croissant</option>
+                                <option value="price-desc">Prix décroissant</option>
+                                <option value="newest">Plus récents</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Grille de livres -->
+                    <div class="row" id="books-container">
+                        <!-- Les livres seront chargés dynamiquement -->
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination justify-content-center" id="pagination">
+                            <!-- La pagination sera générée dynamiquement -->
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer (même que index.html) -->
+    <footer class="bg-dark text-light py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5><i class="fas fa-store"></i> Librairie & Boutique</h5>
+                    <p>Votre magasin en ligne de référence pour les produits et livres à Abidjan.</p>
+                    <div class="social-links">
+                        <div class="social-links">
+                            <a href="#" class="text-light me-3"><i class="fab fa-whatsapp fa-2x"></i></a>
+                            <a href="#" class="text-light me-3"><i class="fab fa-facebook fa-2x"></i></a>
+                            <a href="#" class="text-light"><i class="fab fa-instagram fa-2x"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Contact</h5>
+                    <p><i class="fas fa-phone"></i> +225 07 07 07 07 07</p>
+                    <p><i class="fas fa-envelope"></i> contact@librairie-boutique.ci</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Abidjan, Côte d'Ivoire</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Horaires</h5>
+                    <p>Lundi - Vendredi: 8h00 - 18h00</p>
+                    <p>Samedi: 8h00 - 14h00</p>
+                    <p>Dimanche: Fermé</p>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p>&copy; 2024 Librairie & Boutique en Ligne. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal du Panier (même que index.html) -->
+    <div class="modal fade" id="cartModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-shopping-cart"></i> Votre Panier
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="cart-items">
+                        <!-- Les articles du panier seront affichés ici -->
+                    </div>
+                    <div class="cart-total text-end mt-3">
+                        <h5>Total: <span id="cart-total">0 F CFA</span></h5>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Continuer vos achats</button>
+                    <button type="button" class="btn btn-primary" onclick="proceedToCheckout()">Commander</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Connexion (même que index.html) -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-user"></i> Connexion
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mot de passe</label>
+                            <input type="password" class="form-control" id="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+                    </form>
+                    <p class="text-center mt-3">
+                        Pas encore de compte? <a href="#" onclick="showRegisterModal()">S'inscrire</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/cart.js"></script>
+    <script>
+        // Charger les livres lors du chargement de la page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBooks();
+            
+            // Vérifier la catégorie dans l'URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const category = urlParams.get('categorie');
+            if (category) {
+                document.getElementById(category).checked = true;
+                if (category === 'scolaire') {
+                    document.getElementById('niveauScolaire').disabled = false;
+                }
+                applyFilters();
+            }
+            
+            // Activer/désactiver le filtre niveau scolaire
+            document.querySelectorAll('input[name="category"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const niveauSelect = document.getElementById('niveauScolaire');
+                    if (this.value === 'scolaire') {
+                        niveauSelect.disabled = false;
+                    } else {
+                        niveauSelect.disabled = true;
+                        niveauSelect.value = '';
+                    }
+                });
+            });
+        });
+
+        // Fonction pour charger les livres
+        async function loadBooks() {
+            try {
+                const response = await fetch('tables/produits');
+                const data = await response.json();
+                
+                // Filtrer les livres (type = 'librairie')
+                const books = data.data.filter(product => 
+                    product.type === 'librairie' && product.disponible === true
+                );
+                
+                displayBooks(books);
+            } catch (error) {
+                console.error('Erreur lors du chargement des livres:', error);
+                // Afficher des livres par défaut si l'API n'est pas disponible
+                displayBooks(getDefaultBooks());
+            }
+        }
+
+        // Fonction pour afficher les livres
+        function displayBooks(books) {
+            const container = document.getElementById('books-container');
+            container.innerHTML = '';
+            
+            document.getElementById('results-count').textContent = `${books.length} livre(s) trouvé(s)`;
+            
+            books.forEach(book => {
+                const bookCard = `
+                    <div class="col-md-4 mb-4">
+                        <div class="card book-card h-100">
+                            <img src="${book.image || 'images/default-book.jpg'}" class="card-img-top" alt="${book.nom}">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">${book.nom}</h5>
+                                <p class="card-text">
+                                    <small class="text-muted">Auteur: ${book.auteur || 'Non spécifié'}</small><br>
+                                    <small class="text-muted">${book.categorie}</small>
+                                </p>
+                                <p class="card-text">${book.description}</p>
+                                <div class="mt-auto">
+                                    <p class="fw-bold text-primary fs-5">${book.prix} F CFA</p>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-primary flex-fill" onclick="addToCart(${book.id})">
+                                            <i class="fas fa-cart-plus"></i> Ajouter
+                                        </button>
+                                        <button class="btn btn-outline-secondary" onclick="viewProduct(${book.id})">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += bookCard;
+            });
+        }
+
+        // Fonction pour obtenir des livres par défaut
+        function getDefaultBooks() {
+            return [
+                {
+                    id: 101,
+                    nom: "Mathématiques Terminale S",
+                    description: "Manuel complet pour la terminale scientifique",
+                    prix: 12000,
+                    categorie: "scolaire",
+                    auteur: "Collectif",
+                    image: "images/math-ts.jpg"
+                },
+                {
+                    id: 102,
+                    nom: "Le Petit Prince",
+                    description: "Célèbre conte philosophique",
+                    prix: 5000,
+                    categorie: "romans",
+                    auteur: "Antoine de Saint-Exupéry",
+                    image: "images/petit-prince.jpg"
+                },
+                {
+                    id: 103,
+                    nom: "Introduction à la Programmation",
+                    description: "Guide complet pour débutants",
+                    prix: 18000,
+                    categorie: "professionnels",
+                    auteur: "Jean Dupont",
+                    image: "images/prog-book.jpg"
+                },
+                {
+                    id: 104,
+                    nom: "Physique-Chimie 1ère S",
+                    description: "Cours et exercices corrigés",
+                    prix: 10000,
+                    categorie: "scolaire",
+                    auteur: "Collectif",
+                    image: "images/physique-1s.jpg"
+                },
+                {
+                    id: 105,
+                    nom: "L'Étranger",
+                    description: "Roman classique d'Albert Camus",
+                    prix: 6000,
+                    categorie: "romans",
+                    auteur: "Albert Camus",
+                    image: "images/etranger.jpg"
+                },
+                {
+                    id: 106,
+                    nom: "Marketing Digital",
+                    description: "Stratégies et techniques modernes",
+                    prix: 25000,
+                    categorie: "professionnels",
+                    auteur: "Marie Martin",
+                    image: "images/marketing-book.jpg"
+                }
+            ];
+        }
+
+        // Autres fonctions nécessaires
+        function applyFilters() {
+            loadBooks(); // Recharger avec les filtres
+        }
+
+        function sortBooks() {
+            loadBooks(); // Recharger avec le tri
+        }
+
+        function searchBooks() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            loadBooks(); // Recharger avec la recherche
+        }
+
+        function viewProduct(productId) {
+            // Rediriger vers la page de détail du produit
+            window.location.href = `produit-detail.html?id=${productId}`;
+        }
+
+        function proceedToCheckout() {
+            window.location.href = 'checkout.html';
+        }
+    </script>
+</body>
+</html>
